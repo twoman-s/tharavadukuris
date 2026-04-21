@@ -50,4 +50,3 @@ EXPOSE 8000
 # Entrypoint
 # -------------------------------
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]
-```
