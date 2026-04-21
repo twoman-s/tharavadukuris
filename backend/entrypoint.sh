@@ -1,20 +1,35 @@
+```sh
 #!/bin/sh
-# Debug: show current user and directory permissions
-echo "Current user: $(id)"
-echo "Directory permissions:"
-ls -la /app
-ls -la /app/db.sqlite3 || echo "db.sqlite3 not found"
+
+set -e  # Exit immediately if a command fails
+
+echo "🚀 Starting entrypoint..."
+
+# Debug info
+echo "👤 Current user: $(id)"
+echo "📁 Listing /app directory:"
+ls -la /app || true
+
+# Ensure database file exists and is writable
+echo "🛠 Preparing SQLite database..."
+touch /app/db.sqlite3 || true
+chmod 666 /app/db.sqlite3 || true
+
+# Ensure app directory is writable (important for SQLite)
+chmod -R 777 /app || true
+
+echo "📁 Database file status:"
+ls -la /app/db.sqlite3 || true
 
 # Apply database migrations
-echo "Applying database migrations..."
-python manage.py migrate
+echo "📦 Applying database migrations..."
+python manage.py migrate --noinput
 
 # Collect static files
-echo "Collecting static files..."
+echo "📦 Collecting static files..."
 python manage.py collectstatic --noinput
 
 # Start server
-echo "Starting server..."
-# Using runserver for simplicity, but gunicorn is recommended for production
-# exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
-python manage.py runserver 0.0.0.0:8000
+echo "🌐 Starting Django development server..."
+exec python manage.py runserver 0.0.0.0:8000
+```
