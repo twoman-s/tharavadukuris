@@ -1,35 +1,39 @@
 ```sh
 #!/bin/sh
 
-set -e  # Exit immediately if a command fails
+set -e
 
-echo "🚀 Starting entrypoint..."
+echo "Starting entrypoint..."
 
 # Debug info
-echo "👤 Current user: $(id)"
-echo "📁 Listing /app directory:"
+echo "Current user: $(id)"
+echo "Listing /app directory:"
 ls -la /app || true
 
-# Ensure database file exists and is writable
-echo "🛠 Preparing SQLite database..."
-touch /app/db.sqlite3 || true
-chmod 666 /app/db.sqlite3 || true
+# -------------------------------
+# Prepare SQLite database (FIXED)
+# -------------------------------
+echo "Preparing database..."
 
-# Ensure app directory is writable (important for SQLite)
-chmod -R 777 /app || true
+mkdir -p /data
+touch /data/db.sqlite3
+chmod 666 /data/db.sqlite3
 
-echo "📁 Database file status:"
-ls -la /app/db.sqlite3 || true
+echo "Database file status:"
+ls -la /data/db.sqlite3 || true
 
-# Apply database migrations
-echo "📦 Applying database migrations..."
+# -------------------------------
+# Django setup
+# -------------------------------
+echo "Applying migrations..."
 python manage.py migrate --noinput
 
-# Collect static files
-echo "📦 Collecting static files..."
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
+# -------------------------------
 # Start server
-echo "🌐 Starting Django development server..."
+# -------------------------------
+echo "Starting server..."
 exec python manage.py runserver 0.0.0.0:8000
 ```
