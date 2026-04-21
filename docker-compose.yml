@@ -1,13 +1,6 @@
 version: '3.8'
 
 services:
-  db:
-    image: alpine:latest
-    volumes:
-      - ./backend/db.sqlite3:/app/db.sqlite3
-    # Note: Using SQLite, so we just mount the file. 
-    # For production, consider PostgreSQL.
-
   backend:
     build: ./backend
     volumes:
@@ -18,8 +11,6 @@ services:
       - ./backend/.env
     environment:
       - DEBUG=0
-    depends_on:
-      - db
 
   frontend:
     build: ./frontend
