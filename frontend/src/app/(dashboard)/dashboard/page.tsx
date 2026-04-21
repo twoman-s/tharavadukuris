@@ -31,9 +31,10 @@ export default function DashboardPage() {
     fetchDashboard();
   }, [isAdmin]);
 
-  const formatCurrency = (val: string | number) => {
+  const formatCurrency = (val: string | number | undefined | null) => {
+    if (val === undefined || val === null) return '₹0';
     const num = typeof val === 'string' ? parseFloat(val) : val;
-    return `₹${num.toLocaleString('en-IN')}`;
+    return `₹${(isNaN(num) ? 0 : num).toLocaleString('en-IN')}`;
   };
 
   if (loading) {

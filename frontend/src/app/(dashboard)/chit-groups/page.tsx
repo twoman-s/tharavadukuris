@@ -65,9 +65,10 @@ export default function ChitGroupsPage() {
     }
   };
 
-  const formatCurrency = (val: string | number) => {
+  const formatCurrency = (val: string | number | undefined | null) => {
+    if (val === undefined || val === null) return '₹0';
     const num = typeof val === 'string' ? parseFloat(val) : val;
-    return `₹${num.toLocaleString('en-IN')}`;
+    return `₹${(isNaN(num) ? 0 : num).toLocaleString('en-IN')}`;
   };
 
   const columns = [
