@@ -15,7 +15,7 @@ services:
   frontend:
     build: ./frontend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost
+      - NEXT_PUBLIC_API_URL=https://tharavadukuris.oopsops.in
     # Standalone build doesn't need volumes for code
 
   nginx:
