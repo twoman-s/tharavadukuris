@@ -1,4 +1,9 @@
 #!/bin/sh
+# Debug: show current user and directory permissions
+echo "Current user: $(id)"
+echo "Directory permissions:"
+ls -la /app
+ls -la /app/db.sqlite3 || echo "db.sqlite3 not found"
 
 # Apply database migrations
 echo "Applying database migrations..."
