@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: alpine:latest
+    volumes:
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    # Note: Using SQLite, so we just mount the file. 
+    # For production, consider PostgreSQL.
+
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    env_file:
+      - ./backend/.env
+    environment:
+      - DEBUG=0
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost
+    # Standalone build doesn't need volumes for code
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - ./backend/media:/app/media # Link media to host
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  static_volume:
+  media_volume:
